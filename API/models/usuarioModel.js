@@ -9,7 +9,7 @@ class usuarioModel {
   }
 
   async addProduto(categoria, nome, preco, descricao) {
-    const conexao = await bancoDeDados.conectar();
+    const conexao = await conexaoBancoDeDados.conectar();
     const sql =
       "INSERT INTO produtos (categoria, nome, preco, descricao) VALUES ($1, $2, $3,$4)";
     return await conexao.query(sql, [categoria, nome, preco, descricao]);
@@ -41,10 +41,10 @@ class usuarioModel {
     const comandoSql =
       "UPDATE produtos SET categoria = ($1), preco = ($3), descricao = ($4) WHERE nome = ($2)";
     return await conexao.query(comandoSql, [
-      novaCategoria,
-      novoPreco,
-      novaDescricao,
+      categoria,
       nome,
+      preco,
+      descricao,
     ]);
   }
 }

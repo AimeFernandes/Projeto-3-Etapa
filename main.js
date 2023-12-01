@@ -1,4 +1,4 @@
-async function enviar(acao) {
+/*async function enviar(acao) {
   limparToken();
   const email = document.querySelector("input#email").value;
   const senha = document.querySelector("input#senha").value;
@@ -53,4 +53,4 @@ function mostrarMessage(message) {
 }
 function limparToken() {
   localStorage.clear();
-}
+}*/

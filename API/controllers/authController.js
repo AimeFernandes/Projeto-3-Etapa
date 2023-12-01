@@ -38,6 +38,7 @@ class authController {
         .send({ login: false, message: `Erro ao logar - ${error}` });
     }
   }
+
 }
 
 module.exports = new authController();

@@ -42,7 +42,7 @@ class UsuarioController {
   async deletarProduto(req, res) {
     try {
       const nomeDoProduto = parseInt(req.params.nome);
-      const resp = await usuarioModel.deletarPedido(nomeDoProduto);
+      const resp = await usuarioModel.deletarProduto(nomeDoProduto);
       res.status(500).send({ message: "Deletado com sucesso" });
     } catch (error) {
       res.status(500).send({ message: `Erro ao deletar produto - ${error}` });
@@ -50,13 +50,13 @@ class UsuarioController {
   }
 
   async editarProduto(req, res) {
-    const { novaCategoria, nome, novoPreco, novaDescricao } = req.body;
+    const { categoria, nome, preco, descricao } = req.body;
     try {
       await usuarioModel.editarProduto(
-        novaCategoria,
+        categoria,
         nome,
-        novoPreco,
-        novaDescricao
+        preco,
+        descricao
       );
       res.status(200).send({ message: "Produto atualizado!" });
     } catch (error) {

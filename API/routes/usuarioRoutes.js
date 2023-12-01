@@ -7,7 +7,7 @@ routes
   .get("/listarProdutos", usuarioController.listarProdutos)
   .post("/cadastro", usuarioController.cadastrar)
   .post("/produtos", usuarioController.addProduto) 
-  .put("/editarProduto", usuarioController.editarProduto)
+  .put("/editarProduto/:nome", usuarioController.editarProduto)
   .delete("/deletarProduto/:nome", usuarioController.deletarProduto);
 
 module.exports = routes;

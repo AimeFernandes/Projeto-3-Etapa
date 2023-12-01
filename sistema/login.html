@@ -1,4 +1,10 @@
-/* body {
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
     margin: 0;
     padding: 0;
     font-family: "Arial", sans-serif; 
@@ -10,7 +16,7 @@
   body {
     margin: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f0f0;
+    background-color: rgb(31, 31, 97);
   }
   
   .overlay {
@@ -60,7 +66,7 @@
   }
   
   .container {
-    background: rgba(255, 255, 255, 0.8); 
+    background: rgba(255, 255, 255, 0.8)  ; 
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -98,14 +104,14 @@
     width: 100%;
   }
   button:nth-of-type(1) {
-    background-color: rgb(255, 2, 2);
+    background-color: rgb(31, 31, 97);
     margin-bottom: 10px;
   }
   button:nth-of-type(2) {
     background-color:#525c64;
   }
   button:nth-of-type(1):hover {
-    background-color: rgb(255, 2, 2);
+    background-color: rgb(31, 31, 97);
   }
   
   button:nth-of-type(2):hover {
@@ -160,4 +166,89 @@
     100% {
       width: 0;
     }
-  }  */
+  }
+    </style>
+    <title>Login e Cadastro</title>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h2>Login</h2>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" />
+
+        <button onclick="enviar('logar')">Login</button>
+        <button onclick="enviar('cadastrar')">Cadastrar-se</button>
+      </div>
+    </div>
+    <div class="alerta" id="alerta">
+      <div class="card-container">
+        <div id="alert-text">Alerta!</div>
+        <div class="loading-bar">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script> 
+    async function enviar(acao) {
+  limparToken();
+  const email = document.querySelector("input#email").value;
+  const senha = document.querySelector("input#senha").value;
+
+  const dados = { email: email, senha: senha };
+
+  switch (acao) {
+    case "logar":
+      try {
+        const respostaLogin = await fetch("http://localhost:3000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          mode: "cors",
+          body: JSON.stringify(dados),
+        });
+        const retornoApi = await respostaLogin.json();
+        if (retornoApi.login === true) {
+          const token = retornoApi.token;
+          localStorage.setItem("token", token);
+
+          window.location.href = "./index.html";
+        } else {
+          mostrarMessage(retornoApi.message);
+        }
+      } catch (error) {
+        mostrarMessage(error.message);
+      }
+      break;
+    case "cadastrar":
+      const respostaCadastro = await fetch("http://localhost:3000/cadastro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        mode: "cors",
+        body: JSON.stringify(dados),
+      });
+
+      const message = await respostaCadastro.json();
+      mostrarMessage(message.message);
+      break;
+  }
+}
+function mostrarMessage(message) {
+  const card = document.getElementById("alerta");
+  const texto = document.getElementById("alert-text");
+
+  texto.innerHTML = message;
+  card.style.display = "flex";
+
+  setTimeout(() => {
+    card.style.display = "none";
+  }, 5000);
+}
+function limparToken() {
+  localStorage.clear();
+}
+  </script>
+</html>
