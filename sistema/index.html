@@ -267,54 +267,54 @@
       
       let idProduto;
 
-async function preencherCampos(idProduto) {
-  const id = parseInt(idProduto);
-  idProduto = id;
-  const editCategoria = document.querySelector("#editCategoria");
-  const editNome = document.querySelector("#editNome");
-  const editPreco = document.querySelector("#editPreco");
-  const editDescricao = document.querySelector("#editDescricao");
+  async function preencherCampos(idProduto) {
+    const id = parseInt(idProduto);
+    idProduto = id;
+    const editCategoria = document.querySelector("#editCategoria");
+    const editNome = document.querySelector("#editNome");
+    const editPreco = document.querySelector("#editPreco");
+    const editDescricao = document.querySelector("#editDescricao");
 
-  try {
-    const response = await fetch(baseUrl + "/listarProdutoPorId/" + id);
-    const data = await response.json();
-    editCategoria.value = data[0].categoria;
-    editNome.value = data[0].nome;
-    editPreco.value = data[0].preco;
-    editDescricao.value = data[0].descricao;
-  } catch (error) {
-    alert("Ocorreu um erro " + error);
+    try {
+      const response = await fetch(baseUrl + "/listarProdutoPorId/" + id);
+      const data = await response.json();
+      editCategoria.value = data[0].categoria;
+      editNome.value = data[0].nome;
+      editPreco.value = data[0].preco;
+      editDescricao.value = data[0].descricao;
+    } catch (error) {
+      alert("Ocorreu um erro " + error);
+    }
   }
-}
 
-async function editar() {
-  const novaCategoria = document.querySelector("#editCategoria").value;
-  console.log(novaCategoria);
-  const novoNome = document.querySelector("#editNome").value;
-  const novoPreco = document.querySelector("#editPreco").value;
-  const novaDescricao = document.querySelector("#editDescricao").value;
+  async function editar() {
+    const novaCategoria = document.querySelector("#editCategoria").value;
+    console.log(novaCategoria);
+    const novoNome = document.querySelector("#editNome").value;
+    const novoPreco = document.querySelector("#editPreco").value;
+    const novaDescricao = document.querySelector("#editDescricao").value;
 
-  try {
-    const resposta = await fetch("http://localhost:3000/editarProduto", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        novaCategoria,
-        novoNome,
-        novoPreco,
-        novaDescricao,
-        id: idProduto,
-      }),
-    });
-    const resp = await resposta.json();
-    alert(resp.message);
-    location.reload();
-  } catch (error) {
-    alert("Erro ao editar " + error);
+    try {
+      const resposta = await fetch("http://localhost:3000/editarProduto", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          novaCategoria,
+          novoNome,
+          novoPreco,
+          novaDescricao,
+          id: idProduto,
+        }),
+      });
+      const resp = await resposta.json();
+      alert(resp.message);
+      location.reload();
+    } catch (error) {
+      alert("Erro ao editar " + error);
+    }
   }
-}
 
 
       async function logout(index) {

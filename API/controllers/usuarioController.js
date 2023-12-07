@@ -33,7 +33,7 @@ class UsuarioController {
   async listarProdutoPorNome(req, res) {
     try {
       const nome = req.params.nome;
-      const produtos = await usuarioModel.listarProdutoPorNome();
+      const produtos = await usuarioModel.listarProdutoPorNome(nome);
       res.status(200).json(produtos);
     } catch (error) {
       res.status(500).send({ message: `Erro ao listar produto - ${error}` });
@@ -43,7 +43,7 @@ class UsuarioController {
   async listarProdutoPorId(req, res) {
     try {
       const id = parseInt(req.params.id)
-      const produto = await usuarioModel.listarProdutoPorId();
+      const produto = await usuarioModel.listarProdutoPorId(id);
       res.status(200).json(produto);
     } catch (error) {
       res.status(500).send({ message: `Erro ao listar produto - ${error}` });

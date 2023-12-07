@@ -34,6 +34,7 @@ class usuarioModel {
     const conexao = await conexaoBancoDeDados.conectar();
     const comandoSql = "SELECT * FROM produtos WHERE id = ($1)";
     const produto = await conexao.query(comandoSql, [id]);
+    
     return produto.rows;
   }
   
