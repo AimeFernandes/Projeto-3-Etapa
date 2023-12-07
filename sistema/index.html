@@ -13,9 +13,9 @@
   <body style="background-color:rgb(31, 31, 97)">
     <nav class="navbar" style="background-color: rgb(31, 31, 97);">
       <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1" style="color:antiquewhite; font-size: 30px; font: weight 700; margin:auto">A.C. Peças e Assessórios para eletrodomésticos</span>
+        <span class="navbar-brand mb-0 h1" style="color:antiquewhite; font-size: 30px; font: weight 700; margin:auto; margin-top: 10px;">A.C. Peças e Assessórios para eletrodomésticos</span>
       </div>
-      <button type="button" class="btn negrito" style="background-color: #2626e1; color: white; margin-left: 10px" onclick="logout()">Sair</button>
+      <button type="button" class="btn negrito" style="background-color:rgb(110, 110, 240); color: white; margin-left: 10px" onclick="logout()">Fazer logout</button>
     </nav>
   
     <div id="container">
@@ -126,7 +126,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="editar" style="background-color:blue; border: 0;">Editar</button>
+            <button type="button" class="btn btn-primary" id="editar" onclick="editar()" style="background-color:blue; border: 0;">Editar</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           </div>
         </div>
@@ -178,6 +178,8 @@
         const modal = bootstrap.Modal.getInstance(m);
         modal.hide();
         exibirDados();
+
+        document.location.reload();
       }
   
       async function exibirDados(agenda) {
@@ -192,13 +194,13 @@
               <td>${dado.nome}</td>
               <td>${dado.preco}</td>
               <td>${dado.descricao}</td>
-              <td><i class="bi bi-pencil-square" style="cursor: pointer" onclick="editarDados(${dado.id})"></i></td>
-              <td><i class="bi bi-trash" style="cursor: pointer" onclick="removerDados(${dado.id})"></i></td>
+              <td><i class="bi bi-pencil-square" style="cursor: pointer" onclick="preencherCampos(${dado.id})"></i></td>
+              <td><i class="bi bi-trash" style="cursor: pointer" onclick="deletarProduto(${dado.id})"></i></td>
             </tr>`;
         });
   
         if (linhas == "") {
-          linhas = `
+          linhas = `/
             <tr>
               <td colspan="5" style="text-align:center">Não há dados cadastrados</td>
             </tr>
@@ -223,26 +225,28 @@
       }
 
       async function buscarDados() {
-        const filtro = document.querySelector("#search");
+        const nome = document.querySelector("#search").value;
   
         try {
 
-          if (filtro.value == "")
-            getDados();
+          if (nome == "")
+            await getDados();
           else {
-            const response = await fetch(baseUrl + "/listarProduto" + filtro.value);
+            const response = await fetch(baseUrl + "/listarProdutoPorNome/" + nome);
             const data = await response.json();
+            console.log(data);
             exibirDados(data);
           }
   
         } catch (error) {
-          alert("Ocorreu um erro")
+          alert("Ocorreu um erro: "+ error)
           console.log(error)
+          document.location.reload();
         }
   
       }
   
-      async function removerDados(index){
+      async function deletarProduto(id){
 
         const modalRemover = new bootstrap.Modal('#modalRemover');
         modalRemover.show();
@@ -250,7 +254,7 @@
         btnRemover.addEventListener("click", async () => {
 
           try {
-            await fetch(baseUrl + "/deletarProduto" + index, { method: "DELETE" });
+            await fetch(baseUrl + "/deletarProduto/" + id, { method: "DELETE" });
             modalRemover.hide();
             exibirDados(agenda);
           } catch (error) {
@@ -260,56 +264,63 @@
         });
       }
   
-      async function editarDados(index) {
+      
+      let idProduto;
 
-        const editCategoria = document.querySelector("#editCategoria");
-        const editNome = document.querySelector("#editNome");
-        const editPreco = document.querySelector("#editPreco");
-        const editDescricao = document.querySelector("#editDescricao");
+async function preencherCampos(idProduto) {
+  const id = parseInt(idProduto);
+  idProduto = id;
+  const editCategoria = document.querySelector("#editCategoria");
+  const editNome = document.querySelector("#editNome");
+  const editPreco = document.querySelector("#editPreco");
+  const editDescricao = document.querySelector("#editDescricao");
 
-        try {
-          const response = await fetch(baseUrl + "/editarProduto" + index);
-          const data = await response.json();
-          editCategoria.value = data.categoria;
-          editNome.value = data.nome;
-          editPreco.value = data.preco;
-          editDescricao.value = data.descricao;
-        } catch (error) {
-          alert("Ocorreu um erro")
-          console.log(error)
-        }
-  
-        const modalEditar = new bootstrap.Modal('#editModal');
-        modalEditar.show();
-        const editar = document.querySelector("#editar");
-        editar.addEventListener("click", async () => {
-          const dado = {
-            categoria: editCategoria.value,
-            nome: editNome.value,
-            preco: editPreco.value,
-            descricao: editDescricao.value
-          };
+  try {
+    const response = await fetch(baseUrl + "/listarProdutoPorId/" + id);
+    const data = await response.json();
+    editCategoria.value = data[0].categoria;
+    editNome.value = data[0].nome;
+    editPreco.value = data[0].preco;
+    editDescricao.value = data[0].descricao;
+  } catch (error) {
+    alert("Ocorreu um erro " + error);
+  }
+}
 
-          try {
-            const response = await fetch(baseUrl + "/editarProduto" + index, {
-              method: "PUT",
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(dado)
-            });
-            exibirDados();
-            modalEditar.hide();
-          } catch (error) {
-            alert("Ocorreu um erro")
-            console.log(error)
-          }
-  
-        })
-        
-        function logout() {
+async function editar() {
+  const novaCategoria = document.querySelector("#editCategoria").value;
+  console.log(novaCategoria);
+  const novoNome = document.querySelector("#editNome").value;
+  const novoPreco = document.querySelector("#editPreco").value;
+  const novaDescricao = document.querySelector("#editDescricao").value;
+
+  try {
+    const resposta = await fetch("http://localhost:3000/editarProduto", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        novaCategoria,
+        novoNome,
+        novoPreco,
+        novaDescricao,
+        id: idProduto,
+      }),
+    });
+    const resp = await resposta.json();
+    alert(resp.message);
+    location.reload();
+  } catch (error) {
+    alert("Erro ao editar " + error);
+  }
+}
+
+
+      async function logout(index) {
           localStorage.clear();
           window.location.href = '../login.html';
         }
-      }
 
     </script>
 

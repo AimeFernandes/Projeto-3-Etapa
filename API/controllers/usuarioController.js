@@ -20,12 +20,33 @@ class UsuarioController {
     }
   }
 
+
   async listarProdutos(req, res) {
     try {
       const produtos = await usuarioModel.listarProdutos();
       res.status(200).json(produtos);
     } catch (error) {
       res.status(500).send({ message: `Erro ao listar produtos - ${error}` });
+    }
+  }
+
+  async listarProdutoPorNome(req, res) {
+    try {
+      const nome = req.params.nome;
+      const produtos = await usuarioModel.listarProdutoPorNome();
+      res.status(200).json(produtos);
+    } catch (error) {
+      res.status(500).send({ message: `Erro ao listar produto - ${error}` });
+    }
+  }
+
+  async listarProdutoPorId(req, res) {
+    try {
+      const id = parseInt(req.params.id)
+      const produto = await usuarioModel.listarProdutoPorId();
+      res.status(200).json(produto);
+    } catch (error) {
+      res.status(500).send({ message: `Erro ao listar produto - ${error}` });
     }
   }
 
@@ -41,23 +62,26 @@ class UsuarioController {
 
   async deletarProduto(req, res) {
     try {
-      const nomeDoProduto = parseInt(req.params.nome);
-      const resp = await usuarioModel.deletarProduto(nomeDoProduto);
-      res.status(500).send({ message: "Deletado com sucesso" });
+      const idProduto = req.params.id;
+      const resp = await usuarioModel.deletarProduto(idProduto);
+      return res.status(200).send({ message: "Deletado com sucesso" });
     } catch (error) {
-      res.status(500).send({ message: `Erro ao deletar produto - ${error}` });
+      return res.status(500).send({ message: `Erro ao deletar produto - ${error}` });
     }
   }
 
   async editarProduto(req, res) {
-    const { categoria, nome, preco, descricao } = req.body;
+    const { novaCategoria, novoNome, novoPreco, novaDescricao,id} = req.body;
     try {
-      await usuarioModel.editarProduto(
-        categoria,
-        nome,
-        preco,
-        descricao
+      const idProduto = req.params.id
+      const resp = await usuarioModel.editarProduto(
+        novaCategoria,
+        novoNome,
+        novoPreco,
+        novaDescricao,
+        id
       );
+      
       res.status(200).send({ message: "Produto atualizado!" });
     } catch (error) {
       res.status(500).send({ message: `Erro ao editar produto - ${error}` });
