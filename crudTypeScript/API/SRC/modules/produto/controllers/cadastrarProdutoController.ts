@@ -7,6 +7,6 @@ export class cadastrarProdutoController {
     async handle(request: Request, response: Response): Promise<Response> {
         const produto = <ProdutoDTO>request.body
         await this.service.execute(produto)
-        return response.json({ message: "Produto criado com sucesso "})
+        return response.json({ message: "Produto cadastrado com sucesso "})
     }
 }
