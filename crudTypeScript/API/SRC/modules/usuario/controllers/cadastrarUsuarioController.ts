@@ -7,6 +7,6 @@ export class cadastrarUsuarioController {
     async handle(request: Request, response: Response): Promise<Response> {
         const usuario = <UsuarioDTO>request.body
         await this.service.execute(usuario)
-        return response.json({ message: "Usuário criado com sucesso "})
+        return response.json({ message: "Usuário cadastrado com sucesso "})
     }
 }
