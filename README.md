@@ -1,1 +1,5 @@
-# Projeto do 3º Bimestre
+Trabalho desenvolvido para avaliação do 4 bimestre da máteria de Programação para Internet do Instituto Federal do Rio Grande do Norte. No bimestre anterior foi desenvolvido uma API na lingaguem de Java Script, foram desenvolvidos tanto o back-end quanto o front-end. 
+
+Foi proposto no bimestre anterior o desenvolvimento de uma plicação de gerenciamente de algum estabelecimento, empresa, etc. No meu caso, desenvolvi uma palicação de gerenciamento de estoque de produtos local para a empresa A.C. Peças e Acessórios para Eletrodomésticos, que contou com um login para usuários, bem como o crud para catalogação, edição, busca e remoção de produtos. 
+
+No 4° bimestre, foi proposto uma incrementação ao código já pronto. A mudança do código que estava em Java Script para Type Script, além disso a utilização do Prisma e do Clean Architecture para melhor organização do código e do projeto como um todo. 
